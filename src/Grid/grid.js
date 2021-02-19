@@ -5,13 +5,13 @@ import 'react-resizable/css/styles.css';
 import GridElement from './GridElement';
 import layoutReducer from './layoutReducer';
 import initialItems from './items';
+import Chart from './Chart';
 
 const Grid = (props) => {
   const ref = useRef();
   const [showAddCursor, setShowAddCursor] = useState(false);
   const [layout, dispatch] = useReducer(layoutReducer, initialItems);
 
-  console.log('grid zoom', props.zoom);
   return (
     <div
       className={showAddCursor ? 'adding' : undefined}
@@ -34,6 +34,9 @@ const Grid = (props) => {
               {...item}
             >
               {item.content}
+              {item.content === 'EE' && <Chart />}
+              {item.content === 'AA' && <Chart type="column" height={170} />}
+              {item.content === 'DD' && <Chart type="spline" height={310} />}
               <div
                 className="indicator"
                 onClick={() => {

@@ -45,7 +45,7 @@ export default function App() {
     val /= 100;
     setZoom(Math.max(parseFloat(val.toFixed(2)), 0));
   };
-  console.log('app zoom', zoom);
+
   return (
     <div className="App">
       <div className="header">
