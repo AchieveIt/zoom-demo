@@ -91,6 +91,7 @@ export default function App() {
             transform: `scale(${zoom}, ${zoom})`,
             transformOrigin: '0 0 0',
             width,
+            touchAction: 'pan-x pan-y',
           }}
         >
           <GridLayout zoom={zoom} />
