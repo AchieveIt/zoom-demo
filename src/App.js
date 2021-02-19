@@ -11,10 +11,11 @@ export default function App() {
   const [zoom, setZoom] = useState(1);
   const [open, setopen] = useState(false);
   const [height, setHeight] = useState(0);
+  const [windowwidth, setwindowwidth] = useState(window.innerWidth);
 
   const ref = useRef(null);
 
-  const handler = (e) => {
+  const zoomHandler = (e) => {
     if (e.ctrlKey) {
       e.preventDefault();
 
@@ -25,13 +26,20 @@ export default function App() {
   };
 
   useEffect(() => {
-    window.addEventListener('wheel', handler, {
+    window.addEventListener('wheel', zoomHandler, {
       passive: false,
     });
     return () =>
-      window.removeEventListener('wheel', handler, {
+      window.removeEventListener('wheel', zoomHandler, {
         passive: false,
       });
+  }, []);
+
+  const resizeHandler = (e) => setwindowwidth(e.target.innerWidth);
+
+  useEffect(() => {
+    window.addEventListener('resize', resizeHandler);
+    return () => window.removeEventListener('resize', resizeHandler);
   }, []);
 
   useEffect(() => {
@@ -52,20 +60,31 @@ export default function App() {
 
   return (
     <div className="App">
-      <div className="header">
+      {/* Ensure header scales full width while zoomed */}
+      <div
+        className="header"
+        style={{ width: zoom < 1 ? windowwidth : windowwidth * zoom }}
+      >
         <div>Zoom</div>
-        <div className="zoomToggle">
-          <button onClick={zoomOut}>-</button>
-          <input
-            value={parseFloat((zoom * 100).toFixed(2))}
-            onChange={handleChange}
-          />
-          <button onClick={zoomIn}>+</button>
+        <div className="btnContainer">
+          <div className="zoomToggle">
+            <button onClick={zoomOut}>-</button>
+            <input
+              value={parseFloat((zoom * 100).toFixed(2))}
+              onChange={handleChange}
+            />
+            <button onClick={zoomIn}>+</button>
+          </div>
+          <button className="fit">Fit to window</button>
         </div>
       </div>
       <div
         className="container"
-        style={{ margin: 'auto', width: width * zoom, height: height * zoom }}
+        style={{
+          margin: '100px auto 0',
+          width: width * zoom,
+          height: height * zoom,
+        }}
       >
         <div
           ref={ref}
