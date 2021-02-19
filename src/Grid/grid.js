@@ -11,16 +11,7 @@ const Grid = (props) => {
   const [showAddCursor, setShowAddCursor] = useState(false);
   const [layout, dispatch] = useReducer(layoutReducer, initialItems);
 
-  document.onclick = (event) => {
-    if (ref.current.contains(event.target)) {
-      if (!event.target.classList.contains('indicator')) {
-        setShowAddCursor(false);
-      }
-    } else {
-      setShowAddCursor(false);
-    }
-  };
-
+  console.log('grid zoom', props.zoom);
   return (
     <div
       className={showAddCursor ? 'adding' : undefined}

@@ -1,29 +1,7 @@
 import './App.css';
-import faker from 'faker';
 import React from 'react';
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import GridLayout from './Grid/grid';
-
-/*const widgetTypes = ['bar', 'line', 'PITW', 'gauge'];
-
-const Widget = (props) => {
-  const widgetType = useMemo(() => faker.random.arrayElement(widgetTypes), []);
-  return (
-    <div className="widget">
-      {widgetType} ({props.i})
-    </div>
-  );
-};
-
-const Grid = () => {
-  return (
-    <div className="grid">
-      {Array.from({ length: 120 }, (_, i) => (
-        <Widget key={i} i={i + 1} />
-      ))}
-    </div>
-  );
-};*/
 
 const width = 1440;
 export default function App() {
@@ -67,7 +45,7 @@ export default function App() {
     val /= 100;
     setZoom(Math.max(parseFloat(val.toFixed(2)), 0));
   };
-
+  console.log('app zoom', zoom);
   return (
     <div className="App">
       <div className="header">
