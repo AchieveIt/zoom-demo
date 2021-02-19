@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/zoom-demo/static/css/main.c4789ab1.chunk.css",
-    "main.js": "/zoom-demo/static/js/main.c4f4ce8b.chunk.js",
-    "main.js.map": "/zoom-demo/static/js/main.c4f4ce8b.chunk.js.map",
+    "main.js": "/zoom-demo/static/js/main.389ac737.chunk.js",
+    "main.js.map": "/zoom-demo/static/js/main.389ac737.chunk.js.map",
     "runtime-main.js": "/zoom-demo/static/js/runtime-main.cd59518f.js",
     "runtime-main.js.map": "/zoom-demo/static/js/runtime-main.cd59518f.js.map",
     "static/css/2.0fe8871e.chunk.css": "/zoom-demo/static/css/2.0fe8871e.chunk.css",
@@ -18,6 +18,6 @@
     "static/css/2.0fe8871e.chunk.css",
     "static/js/2.45383d6f.chunk.js",
     "static/css/main.c4789ab1.chunk.css",
-    "static/js/main.c4f4ce8b.chunk.js"
+    "static/js/main.389ac737.chunk.js"
   ]
 }
