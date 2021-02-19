@@ -1,6 +1,6 @@
 const initialItems = [
   { i: '0', x: 0, y: 0, w: 1, h: 2, content: 'A' },
-  { i: '1', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4, content: 'B' },
+  { i: '1', x: 1, y: 0, w: 3, h: 2, content: 'B' },
   { i: '2', x: 4, y: 0, w: 1, h: 2, content: 'C' },
   { i: '3', x: 5, y: 0, w: 1, h: 2, content: 'D' },
   { i: '4', x: 0, y: 2, w: 2, h: 2, content: 'E' },

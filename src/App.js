@@ -30,6 +30,8 @@ export default function App() {
     if (e.ctrlKey) {
       e.preventDefault();
 
+      setIsFitToWindow(false);
+
       setZoom((x) =>
         Math.max(x - parseFloat((e.deltaY * 0.01).toFixed(2)), 0.25)
       );
