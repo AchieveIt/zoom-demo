@@ -29,7 +29,7 @@ const initialItems = [
   { i: '27', x: 0, y: 24, w: 2, h: 3, content: 'BB' },
   { i: '28', x: 0, y: 27, w: 5, h: 5, content: 'CC' },
   { i: '29', x: 5, y: 27, w: 1, h: 10, content: 'DD' },
-  { i: '30', x: 0, y: 32, w: 5, h: 12, content: 'EE' },
+  { i: '30', x: 0, y: 32, w: 5, h: 14, content: 'EE' },
 ];
 
 export default initialItems;

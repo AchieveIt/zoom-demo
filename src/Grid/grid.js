@@ -48,7 +48,7 @@ const Grid = (props) => {
               )}
               {item.content === 'EE' && <Chart />}
               {item.content === 'AA' && <Chart type="column" height={170} />}
-              {item.content === 'DD' && <Chart type="spline" height={310} />}
+              {item.content === 'DD' && <Chart type="spline" height={300} />}
               <div
                 className="indicator"
                 onClick={() => {
