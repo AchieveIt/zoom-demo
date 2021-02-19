@@ -3,7 +3,6 @@ import React from 'react';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import Modal from 'react-modal';
 import GridLayout from './Grid/grid';
-import { set } from 'lodash';
 
 Modal.setAppElement('#modal');
 
@@ -14,8 +13,8 @@ const breakpoints = {
 
 export default function App() {
   const [zoom, setZoom] = useState(1);
-  const [open, setopen] = useState(false);
-  const [height, setHeight] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [zoomContainerHeight, setZoomContainerHeight] = useState(0);
   const [windowwidth, setwindowwidth] = useState(window.innerWidth);
   const [orientation, setorientation] = useState('landscape');
   const [isFitToWindow, setIsFitToWindow] = useState(true);
@@ -82,14 +81,13 @@ export default function App() {
 
   useEffect(() => {
     if (ref.current) {
-      setHeight(ref.current.getBoundingClientRect().height);
+      setZoomContainerHeight(ref.current.getBoundingClientRect().height);
     }
   }, []);
 
   useEffect(() => {
     zoomFitToWindow(window.innerWidth);
-    // eslint-disable-next-line
-  }, []);
+  }, [zoomFitToWindow]);
 
   const zoomIn = () => {
     setIsFitToWindow(false);
@@ -151,7 +149,8 @@ export default function App() {
         style={{
           margin: '100px auto 0',
           width: width * zoom,
-          height: height * zoom,
+          // scale height to remove whitespace
+          height: zoomContainerHeight * zoom,
         }}
       >
         <div
@@ -165,13 +164,13 @@ export default function App() {
         >
           <GridLayout
             zoom={zoom}
-            onClick={() => setopen(true)}
+            onClick={() => setIsModalOpen(true)}
             width={orientation === 'landscape' ? 1620 : 1220}
           />
         </div>
         <Modal
-          isOpen={open}
-          onRequestClose={() => setopen(false)}
+          isOpen={isModalOpen}
+          onRequestClose={() => setIsModalOpen(false)}
           style={{ content: { width: 500, margin: '100px auto' } }}
         >
           <h1>Best modal ever</h1>
@@ -181,7 +180,7 @@ export default function App() {
               display: 'block',
               cursor: 'pointer',
             }}
-            onClick={() => setopen(false)}
+            onClick={() => setIsModalOpen(false)}
           >
             Close me
           </button>
