@@ -34,6 +34,18 @@ const Grid = (props) => {
               {...item}
             >
               {item.content}
+              {parseFloat(item.i) === 1 && (
+                <button
+                  style={{
+                    border: '1px solid blue',
+                    display: 'block',
+                    cursor: 'pointer',
+                  }}
+                  onClick={props.onClick}
+                >
+                  open modal
+                </button>
+              )}
               {item.content === 'EE' && <Chart />}
               {item.content === 'AA' && <Chart type="column" height={170} />}
               {item.content === 'DD' && <Chart type="spline" height={310} />}

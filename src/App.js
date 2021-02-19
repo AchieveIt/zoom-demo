@@ -1,11 +1,15 @@
 import './App.css';
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
+import Modal from 'react-modal';
 import GridLayout from './Grid/grid';
+
+Modal.setAppElement('#modal');
 
 const width = 1440;
 export default function App() {
   const [zoom, setZoom] = useState(1);
+  const [open, setopen] = useState(false);
   const [height, setHeight] = useState(0);
 
   const ref = useRef(null);
@@ -72,8 +76,25 @@ export default function App() {
             touchAction: 'pan-x pan-y',
           }}
         >
-          <GridLayout zoom={zoom} />
+          <GridLayout zoom={zoom} onClick={() => setopen(true)} />
         </div>
+        <Modal
+          isOpen={open}
+          onRequestClose={() => setopen(false)}
+          style={{ content: { width: 500, margin: '100px auto' } }}
+        >
+          <h1>Best modal ever</h1>
+          <button
+            style={{
+              border: '1px solid blue',
+              display: 'block',
+              cursor: 'pointer',
+            }}
+            onClick={() => setopen(false)}
+          >
+            Close me
+          </button>
+        </Modal>
       </div>
     </div>
   );
