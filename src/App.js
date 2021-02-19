@@ -1,21 +1,33 @@
 import './App.css';
 import React from 'react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import Modal from 'react-modal';
 import GridLayout from './Grid/grid';
+import { set } from 'lodash';
 
 Modal.setAppElement('#modal');
 
-const width = 1440;
+const breakpoints = {
+  landscape: { 1700: { margins: 80 } },
+  portrait: { 1300: { margins: 80 } },
+};
+
 export default function App() {
   const [zoom, setZoom] = useState(1);
   const [open, setopen] = useState(false);
   const [height, setHeight] = useState(0);
   const [windowwidth, setwindowwidth] = useState(window.innerWidth);
+  const [orientation, setorientation] = useState('landscape');
+  const [isFitToWindow, setIsFitToWindow] = useState(true);
 
   const ref = useRef(null);
 
+  const width = useMemo(() => (orientation === 'landscape' ? 1620 : 1220), [
+    orientation,
+  ]);
+
   const zoomHandler = (e) => {
+    // override browser zoom & delegate deltaY to zoom level
     if (e.ctrlKey) {
       e.preventDefault();
 
@@ -27,6 +39,8 @@ export default function App() {
 
   useEffect(() => {
     window.addEventListener('wheel', zoomHandler, {
+      // Chrome sets wheel listeners on window, document, & body as passive by default
+      // which throws an error in the console if you call `e.preventDefault()`
       passive: false,
     });
     return () =>
@@ -35,12 +49,36 @@ export default function App() {
       });
   }, []);
 
-  const resizeHandler = (e) => setwindowwidth(e.target.innerWidth);
+  const zoomFitToWindow = useCallback(
+    (baseWidth) => {
+      setwindowwidth(baseWidth);
+
+      const map = breakpoints[orientation];
+      const key = Object.keys(map).find((x) => x >= baseWidth);
+      let widthRatio = 1;
+
+      if (map[key]?.margins) {
+        widthRatio = (baseWidth - map[key].margins) / width;
+      }
+
+      setZoom(widthRatio);
+    },
+    [orientation, width]
+  );
+
+  const resizeHandler = useCallback(
+    (e) => {
+      if (!isFitToWindow) return;
+
+      zoomFitToWindow(e.target.innerWidth);
+    },
+    [zoomFitToWindow, isFitToWindow]
+  );
 
   useEffect(() => {
     window.addEventListener('resize', resizeHandler);
     return () => window.removeEventListener('resize', resizeHandler);
-  }, []);
+  }, [resizeHandler]);
 
   useEffect(() => {
     if (ref.current) {
@@ -48,19 +86,29 @@ export default function App() {
     }
   }, []);
 
-  const zoomIn = () => setZoom((x) => parseFloat((x + 0.25).toFixed(2)));
-  const zoomOut = () =>
+  useEffect(() => {
+    zoomFitToWindow(window.innerWidth);
+    // eslint-disable-next-line
+  }, []);
+
+  const zoomIn = () => {
+    setIsFitToWindow(false);
+    setZoom((x) => parseFloat((x + 0.25).toFixed(2)));
+  };
+  const zoomOut = () => {
+    setIsFitToWindow(false);
     setZoom((x) => Math.max(parseFloat((x - 0.25).toFixed(2)), 0.25));
+  };
 
   const handleChange = (e) => {
     let val = e.target.value;
     val /= 100;
-    setZoom(Math.max(parseFloat(val.toFixed(2)), 0.25));
+    setZoom(Math.max(parseFloat(val.toFixed(2)), 0));
   };
 
   return (
     <div className="App">
-      {/* Ensure header scales full width while zoomed */}
+      {/* Ensure header scales full width while zoomed; Probably a cleaner way to do this */}
       <div
         className="header"
         style={{ width: zoom < 1 ? windowwidth : windowwidth * zoom }}
@@ -75,7 +123,27 @@ export default function App() {
             />
             <button onClick={zoomIn}>+</button>
           </div>
-          <button className="fit">Fit to window</button>
+          <button
+            className={`${isFitToWindow ? 'btn active' : 'btn'}`}
+            onClick={() => {
+              setIsFitToWindow(true);
+              zoomFitToWindow(windowwidth);
+            }}
+          >
+            Fit to window
+          </button>
+          <button
+            className={`${orientation === 'portrait' ? 'btn active' : 'btn'}`}
+            onClick={() => setorientation('portrait')}
+          >
+            Set Portrait
+          </button>
+          <button
+            className={`${orientation === 'landscape' ? 'btn active' : 'btn'}`}
+            onClick={() => setorientation('landscape')}
+          >
+            Set Landscape
+          </button>
         </div>
       </div>
       <div
@@ -95,7 +163,11 @@ export default function App() {
             touchAction: 'pan-x pan-y',
           }}
         >
-          <GridLayout zoom={zoom} onClick={() => setopen(true)} />
+          <GridLayout
+            zoom={zoom}
+            onClick={() => setopen(true)}
+            width={orientation === 'landscape' ? 1620 : 1220}
+          />
         </div>
         <Modal
           isOpen={open}

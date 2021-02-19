@@ -24,7 +24,7 @@ const Grid = (props) => {
           onLayoutChange={(layout) => dispatch({ type: 'newLayout', layout })}
           cols={6}
           rowHeight={30}
-          width={1440}
+          width={props.width}
           transformScale={props.zoom}
         >
           {layout.map((item) => (
