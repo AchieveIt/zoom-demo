@@ -36,14 +36,14 @@ export default function App() {
     }
   }, []);
 
-  const zoomIn = () => setZoom((x) => parseFloat((x + 0.1).toFixed(2)));
+  const zoomIn = () => setZoom((x) => parseFloat((x + 0.25).toFixed(2)));
   const zoomOut = () =>
-    setZoom((x) => Math.max(parseFloat((x - 0.1).toFixed(2)), 0.25));
+    setZoom((x) => Math.max(parseFloat((x - 0.25).toFixed(2)), 0.25));
 
   const handleChange = (e) => {
     let val = e.target.value;
     val /= 100;
-    setZoom(Math.max(parseFloat(val.toFixed(2)), 0));
+    setZoom(Math.max(parseFloat(val.toFixed(2)), 0.25));
   };
 
   return (
