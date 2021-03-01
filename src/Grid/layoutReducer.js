@@ -66,7 +66,7 @@ const layoutReducer = (state, action) => {
     //when the whole layout shall be replaced
     //used on onLayoutChange from grid layou
     case 'newLayout':
-      console.log('dispatching new layout', action.layout);
+      // console.log('dispatching new layout', action.layout);
       if (state.findIndex((item) => item.temp) !== -1) {
         return state;
       }

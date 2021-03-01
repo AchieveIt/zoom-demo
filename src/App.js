@@ -14,6 +14,7 @@ import styled from 'styled-components/macro';
 import DraggableSource from './Grid/DraggableSource';
 import layoutReducer from './Grid/layoutReducer';
 import initialItems from './Grid/items';
+import Toggle from './Toggle';
 import 'react-resizable/css/styles.css';
 
 const SourceDummyBlock = styled.div`
@@ -41,6 +42,7 @@ export default function App() {
   const [orientation, setorientation] = useState('landscape');
   const [isFitToWindow, setIsFitToWindow] = useState(true);
   const [showAddCursor, setShowAddCursor] = useState(false);
+  const [addWidgetType, setAddWidgetType] = useState('click');
 
   const [layout, dispatch] = useReducer(layoutReducer, initialItems);
 
@@ -143,7 +145,7 @@ export default function App() {
     val /= 100;
     setZoom(Math.max(parseFloat(val.toFixed(2)), 0));
   };
-  console.log('layout', layout);
+  console.log('addwidgettype', addWidgetType, addWidgetType === 'click');
   return (
     <div className="App">
       {/* Ensure header scales full width while zoomed; Probably a cleaner way to do this */}
@@ -182,6 +184,13 @@ export default function App() {
           >
             Set Landscape
           </button>
+          <Toggle
+            text={{ checked: '2-Click', unchecked: 'DnD' }}
+            isChecked={addWidgetType === 'click'}
+            onChange={() =>
+              setAddWidgetType((x) => (x === 'dnd' ? 'click' : 'dnd'))
+            }
+          />
         </div>
       </div>
       <div
@@ -193,23 +202,29 @@ export default function App() {
           marginLeft: 60,
         }}
       >
-        <DraggableSource targetRef={ref} dispatch={dispatch} key="1">
-          <SourceDummyBlock>Drag me</SourceDummyBlock>
-        </DraggableSource>
-        <DraggableSource targetRef={ref} dispatch={dispatch} key="2">
-          <SourceDummyBlock>Drag me</SourceDummyBlock>
-        </DraggableSource>
-        <button
-          style={{
-            width: 200,
-            height: 60,
-            border: '1px solid black',
-            borderRadius: 10,
-          }}
-          onClick={() => setShowAddCursor(true)}
-        >
-          Click me to add
-        </button>
+        {addWidgetType === 'dnd' ? (
+          <>
+            <DraggableSource targetRef={ref} dispatch={dispatch} key="1">
+              <SourceDummyBlock>Drag to add widget</SourceDummyBlock>
+            </DraggableSource>
+            <DraggableSource targetRef={ref} dispatch={dispatch} key="2">
+              <SourceDummyBlock>Drag to add widget</SourceDummyBlock>
+            </DraggableSource>
+          </>
+        ) : (
+          <button
+            style={{
+              width: 200,
+              height: 60,
+              border: '1px solid black',
+              borderRadius: 10,
+              margin: '20px 0',
+            }}
+            onClick={() => setShowAddCursor(true)}
+          >
+            Click to add widget
+          </button>
+        )}
       </div>
       <div
         className="container"

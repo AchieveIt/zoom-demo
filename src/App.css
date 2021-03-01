@@ -94,3 +94,58 @@ input {
   color: #0066cc;
   background-color: rgba(0, 102, 204, 0.1);
 }
+
+.toggle {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+  background-color: transparent;
+  user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -wekkit-user-select: none;
+  height: 2.5rem;
+  width: 160px;
+  background-color: white;
+  border: 1px solid rgba(74, 163, 223, 1);
+  border-radius: 20px;
+  margin-left: 1rem;
+}
+
+.checkbox {
+  display: none;
+}
+
+.icon {
+  font-size: 16px;
+  margin-right: 0.5rem;
+}
+
+.labelContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+}
+
+.label {
+  flex-basis: 50%;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  z-index: 1;
+  transition: all 0.2s ease 0s;
+  white-space: nowrap;
+}
+
+.slider {
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+  position: absolute;
+  top: 1px;
+  border-radius: 20px;
+  background-color: #4aa3df;
+  width: 90px;
+  height: 40px;
+}
