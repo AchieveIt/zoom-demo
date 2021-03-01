@@ -1,8 +1,30 @@
 import './App.css';
 import React from 'react';
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+  useReducer,
+} from 'react';
 import Modal from 'react-modal';
 import GridLayout from './Grid/grid';
+import styled from 'styled-components/macro';
+import DraggableSource from './Grid/DraggableSource';
+import layoutReducer from './Grid/layoutReducer';
+import initialItems from './Grid/items';
+import 'react-resizable/css/styles.css';
+
+const SourceDummyBlock = styled.div`
+  width: 100px;
+  height: 100px;
+  border: 1px solid blue;
+  display: grid;
+  place-items: center;
+  margin: 0 20px;
+  border-radius: 10px;
+`;
 
 Modal.setAppElement('#modal');
 
@@ -18,6 +40,9 @@ export default function App() {
   const [windowwidth, setwindowwidth] = useState(window.innerWidth);
   const [orientation, setorientation] = useState('landscape');
   const [isFitToWindow, setIsFitToWindow] = useState(true);
+  const [showAddCursor, setShowAddCursor] = useState(false);
+
+  const [layout, dispatch] = useReducer(layoutReducer, initialItems);
 
   const ref = useRef(null);
 
@@ -49,6 +74,18 @@ export default function App() {
         passive: false,
       });
   }, []);
+
+  const documentClickHandler = (event) => {
+    if (ref.current.contains(event.target)) {
+      if (!event.target.classList.contains('indicator')) {
+        setShowAddCursor(false);
+      }
+    } else {
+      setShowAddCursor(false);
+    }
+  };
+
+  document.onclick = documentClickHandler;
 
   const zoomFitToWindow = useCallback(
     (baseWidth) => {
@@ -88,6 +125,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    // auto fit zoom on page load
     zoomFitToWindow(window.innerWidth);
   }, [zoomFitToWindow]);
 
@@ -105,7 +143,7 @@ export default function App() {
     val /= 100;
     setZoom(Math.max(parseFloat(val.toFixed(2)), 0));
   };
-
+  console.log('layout', layout);
   return (
     <div className="App">
       {/* Ensure header scales full width while zoomed; Probably a cleaner way to do this */}
@@ -147,6 +185,33 @@ export default function App() {
         </div>
       </div>
       <div
+        style={{
+          position: 'relative',
+          top: 100,
+          display: 'flex',
+          alignItems: 'center',
+          marginLeft: 60,
+        }}
+      >
+        <DraggableSource targetRef={ref} dispatch={dispatch} key="1">
+          <SourceDummyBlock>Drag me</SourceDummyBlock>
+        </DraggableSource>
+        <DraggableSource targetRef={ref} dispatch={dispatch} key="2">
+          <SourceDummyBlock>Drag me</SourceDummyBlock>
+        </DraggableSource>
+        <button
+          style={{
+            width: 200,
+            height: 60,
+            border: '1px solid black',
+            borderRadius: 10,
+          }}
+          onClick={() => setShowAddCursor(true)}
+        >
+          Click me to add
+        </button>
+      </div>
+      <div
         className="container"
         style={{
           margin: '100px auto 0',
@@ -158,7 +223,7 @@ export default function App() {
         <div
           ref={ref}
           style={{
-            transform: `scale(${zoom}, ${zoom})`,
+            transform: `scale(${zoom})`,
             transformOrigin: '0 0 0',
             width,
             touchAction: 'pan-x pan-y',
@@ -168,6 +233,10 @@ export default function App() {
             zoom={zoom}
             onClick={() => setIsModalOpen(true)}
             width={orientation === 'landscape' ? 1620 : 1220}
+            layout={layout}
+            dispatch={dispatch}
+            showAddCursor={showAddCursor}
+            setShowAddCursor={setShowAddCursor}
           />
         </div>
         <Modal

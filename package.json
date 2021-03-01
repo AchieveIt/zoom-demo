@@ -19,6 +19,7 @@
     "react-modal": "^3.12.1",
     "react-resizable": "^1.11.0",
     "react-scripts": "4.0.2",
+    "styled-components": "^5.2.1",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

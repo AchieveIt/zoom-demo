@@ -1,33 +1,31 @@
-import React, { useRef, useState, useReducer } from 'react';
+import React, { useRef } from 'react';
 import GridLayout from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import GridElement from './GridElement';
-import layoutReducer from './layoutReducer';
-import initialItems from './items';
 import Chart from './Chart';
 
 const Grid = (props) => {
   const ref = useRef();
-  const [showAddCursor, setShowAddCursor] = useState(false);
-  const [layout, dispatch] = useReducer(layoutReducer, initialItems);
 
   return (
     <div
-      className={showAddCursor ? 'adding' : undefined}
-      style={{ cursor: showAddCursor ? 'crosshair' : undefined }}
+      className={props.showAddCursor ? 'adding' : undefined}
+      style={{ cursor: props.showAddCursor ? 'crosshair' : undefined }}
     >
       <div ref={ref}>
         <GridLayout
           className="layout"
-          layout={layout}
-          onLayoutChange={(layout) => dispatch({ type: 'newLayout', layout })}
+          layout={props.layout}
+          onLayoutChange={(layout) =>
+            props.dispatch({ type: 'newLayout', layout })
+          }
           cols={6}
           rowHeight={30}
           width={props.width}
           transformScale={props.zoom}
         >
-          {layout.map((item) => (
+          {props.layout.map((item) => (
             <GridElement
               key={'' + item.i}
               style={{ border: '1px solid red' }}
@@ -52,10 +50,10 @@ const Grid = (props) => {
               <div
                 className="indicator"
                 onClick={() => {
-                  if (showAddCursor) {
-                    setShowAddCursor(false);
+                  if (props.showAddCursor) {
+                    props.setShowAddCursor(false);
 
-                    const newLayout = layout.concat();
+                    const newLayout = props.layout.concat();
                     newLayout.push({
                       i: newLayout.length.toString(),
                       x: item.x,
@@ -65,7 +63,7 @@ const Grid = (props) => {
                       content: 'N',
                     });
 
-                    dispatch({ type: 'newLayout', layout: newLayout });
+                    props.dispatch({ type: 'newLayout', layout: newLayout });
                   }
                 }}
               />

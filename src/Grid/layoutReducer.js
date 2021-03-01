@@ -19,6 +19,7 @@ const layoutReducer = (state, action) => {
         (val, item) => (item.y + item.w > val ? item.y + item.w : val),
         0
       );
+      console.log('addTemp dispatcher', { maxY, maxX });
       return [
         ...state,
         {
@@ -28,7 +29,7 @@ const layoutReducer = (state, action) => {
           w: action.w ? action.w : 1,
           content: action.content
             ? action.content
-            : String.fromCharCode(65 + state.length),
+            : String.fromCharCode(65 + (state.length % 25)),
           temp: true,
           mouseEvent: action.mouseEvent,
           i: '' + state.length,
@@ -40,11 +41,32 @@ const layoutReducer = (state, action) => {
       return state.filter((item) => !item.temp);
     //finalise the temporary item
     //this is used when dragging a draggablesource over the grid and letting go (mouseup)
-    case 'finaliseTemporaryItem':
-      return state.map((item) => ({ ...item, temp: false }));
+    case 'finaliseTemporaryItem': {
+      const maxX = state.reduce(
+        (val, item) => (item.x + item.h > val ? item.x + item.h : val),
+        0
+      );
+      const maxY = state.reduce(
+        (val, item) => (item.y + item.w > val ? item.y + item.w : val),
+        0
+      );
+      return state.map((item) => {
+        console.log('y comp', item.y % 70);
+        if (item.y + 1 === maxY) {
+          console.log('item', item);
+        }
+        return {
+          ...item,
+          temp: false,
+          y: item.y + 1 === maxY ? Math.floor(item.y % 70) : item.y,
+          x: item.x + 1 === maxX ? 2 : item.x,
+        };
+      });
+    }
     //when the whole layout shall be replaced
     //used on onLayoutChange from grid layou
     case 'newLayout':
+      console.log('dispatching new layout', action.layout);
       if (state.findIndex((item) => item.temp) !== -1) {
         return state;
       }
